@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { fly, slide } from "svelte/transition";
+    import { base } from "$app/paths";
 
     let toggle = $state(false);
     onMount(() => {
@@ -13,6 +14,7 @@
     })
 
     let code = $state("");
+    let group = $state("");
     let numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
     let errorMessage = $state("")
 
@@ -36,6 +38,12 @@
                 return false; 
             }
         }
+        let peerConnect = "codingcafe-" + code.substring(0,1) + "-";
+        peerConnect += "" + (parseInt(code.substring(1))*67);
+        sessionStorage.setItem("mainPeer", peerConnect);
+        sessionStorage.setItem("groupPeer", group);
+        window.location.href = base + "/onboard"
+        console.log(peerConnect);
     }
 </script>
 <svelte:head>
@@ -50,6 +58,9 @@
     <h2 style:font-family="Gabarito, Space Grotesk, Montserrat, Futura;">Enter Competition Code</h2>
     <p><i>{errorMessage}</i></p>
     <input required bind:value={code} style="margin-bottom: 30px;" class="large" id="codeInput"/>
-    {#if code.length > 0}<input transition:slide style="margin-bottom: 30px; font-size: 18px;" type="submit" value="Continue">{/if}
+    <h2 style:font-family="Gabarito, Space Grotesk, Montserrat, Futura;">Enter Group Identifier</h2>
+    <input required bind:value={group} style="margin-bottom: 30px;" class="large" id="groupInput"/>
+
+    {#if code.length == 5 && group.length > 0}<input transition:slide style="margin-bottom: 30px; font-size: 18px;" type="submit" value="Continue">{/if}
 </form>
 {/if}
